@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>SwapDonateRent</h1>
+    <p>Let your unused items spark someone’s future</p>
+    <div class="hero-buttons">
+        <a href="{% url 'item_list' %}" class="btn">Browse Items</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'item_create' %}" class="btn btn-success">Post an Item</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-success">Join Now</a>
+        {% endif %}
+    </div>
+</div>
