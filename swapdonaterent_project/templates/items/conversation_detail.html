@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="conversation-detail-container">
+    <div class="conversation-header">
+        <a href="{% url 'conversations' %}" class="btn">← Back to Conversations</a>
+        <h2>Conversation about: {{ conversation.item.name }}</h2>
+    </div>
+
+    <div class="conversation-content">
+        <div class="message-container">
+            {% for message in messages %}
+                <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
+                    <div class="message-header">
+                        <strong>{{ message.sender.username }}</strong>
+                        <span class="message-time">{{ message.created_at|date:"g:i a" }}</span>
+                    </div>
+                    <div class="message-content">
+                        {{ message.content }}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-messages">
+                    <p>No messages yet. Start the conversation!</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="message-form-container">
+            <form method="POST" class="message-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.content }}
+                </div>
+                <button type="submit" class="btn btn-success">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
