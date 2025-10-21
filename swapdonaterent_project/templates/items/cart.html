@@ -22,3 +22,27 @@
                             {% endif %}
                         </p>
                     </div>
+                        <div class="cart-item-actions">
+                        <a href="{% url 'item_detail' cart_item.item.pk %}" class="btn">View</a>
+                        <a href="{% url 'start_conversation' cart_item.item.id %}" class="btn">Contact Seller</a>
+                        <a href="{% url 'remove_from_cart' cart_item.item.id %}" class="btn btn-danger">Remove</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-actions">
+                <a href="{% url 'item_list' %}" class="btn">Continue Shopping</a>
+
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <h3>Your cart is empty</h3>
+            <p>Browse our items and add some to your cart!</p>
+            <a href="{% url 'item_list' %}" class="btn btn-success">Browse Items</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
