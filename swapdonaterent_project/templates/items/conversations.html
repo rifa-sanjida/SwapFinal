@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="conversations-container">
+    <h1>Your Conversations</h1>
+
+    {% if conversations %}
+        <div class="conversation-list">
+            {% for conversation in conversations %}
+                <a href="{% url 'conversation_detail' conversation.id %}" class="conversation-item {% if conversation.unread_messages %}unread{% endif %}">
+                    <div class="conversation-header">
+                        <h3>{{ conversation.item.name }}</h3>
+                        <span class="conversation-date">{{ conversation.updated_at|date:"M j, g:i a" }}</span>
+                    </div>
