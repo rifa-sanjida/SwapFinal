@@ -10,10 +10,4 @@ class ItemForm(forms.ModelForm):
             'contact_info': forms.Textarea(attrs={'rows': 3}),
         }
 
-class MessageForm(forms.ModelForm):
-    class Meta:
-        model = Message
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Type your message here...'}),
-        }
+
