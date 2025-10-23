@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-<nav class="navbar">
+    <nav class="navbar">
         <div class="nav-container">
             <a href="{% url 'home' %}" class="nav-logo">SwapDonateRent</a>
 
@@ -33,14 +33,16 @@
                     </a>
 
                     <div class="nav-dropdown">
-                        <a href="{% url 'profile' %}" class="nav-link">{{ user.username }}</a>
+                        <a href="{% url 'profile' %}" class="nav-link profile-link">
+                            <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" class="nav-profile-pic">
+                            <span>{{ user.username }}</span>
+                        </a>
                         <div class="dropdown-content">
                             <a href="{% url 'profile' %}">Profile</a>
                             <a href="{% url 'change_password' %}">Change Password</a>
-
                             <form method="post" action="{% url 'logout' %}" style="display: inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="dropdown-content">Logout</button>
+                                <button type="submit" class="dropdown-btn">Logout</button>
                             </form>
                         </div>
                     </div>
