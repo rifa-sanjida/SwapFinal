@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="my-items-header">
+    <h1>My Items</h1>
+    <a href="{% url 'item_create' %}" class="btn btn-success">Post New Item</a>
+</div>
+
+{% if items %}
+    <div class="grid">
+        {% for item in items %}
+            <div class="card">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img">
+                <div class="card-body">
+                    <div class="card-badges">
+                        <span class="item-badge badge-{{ item.item_type }}">{{ item.get_item_type_display }}</span>
+                        <span class="status-badge {% if item.is_active %}active{% else %}inactive{% endif %}">
+                            {% if item.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                    <h3 class="card-title">{{ item.name }}</h3>
+                    <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+
+                    <div class="item-details">
+                        {% if item.price %}
+                            <p class="item-price">Price:{{ item.price }}</p>
+                        {% else %}
+                            <p class="item-price-free">Free</p>
+                        {% endif %}
+                        <p class="item-date">Posted: {{ item.created_at|date:"M j, Y" }}</p>
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="{% url 'item_detail' item.pk %}" class="btn">View</a>
+                        <a href="{% url 'item_update' item.pk %}" class="btn btn-warning">Edit</a>
+                        <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-items">
+        <h3>You haven't posted any items yet</h3>
+        <p>Start sharing your items with the community!</p>
+        <a href="{% url 'item_create' %}" class="btn btn-success">Post Your First Item</a>
+    </div>
+{% endif %}
+{% endblock %}
