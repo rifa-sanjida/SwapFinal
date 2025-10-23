@@ -113,4 +113,49 @@ def cart_view(request):
     return render(request, 'items/cart.html', {'cart_items': cart_items})
 
 
+@login_required
+def conversations(request):
+    user_conversations = Conversation.objects.filter(participants=request.user)
+    return render(request, 'items/conversations.html', {'conversations': user_conversations})
 
+
+@login_required
+def conversation_detail(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id, participants=request.user)
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.conversation = conversation
+            message.sender = request.user
+            message.save()
+            return redirect('conversation_detail', conversation_id=conversation_id)
+    else:
+        form = MessageForm()
+
+    # Mark other user's messages as read
+    Message.objects.filter(conversation=conversation, read=False).exclude(sender=request.user).update(read=True)
+
+    messages_list = conversation.message_set.all().order_by('created_at')
+
+    return render(request, 'items/conversation_detail.html', {
+        'conversation': conversation,
+        'messages': messages_list,
+        'form': form
+    })
+
+
+@login_required
+def start_conversation(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+
+    # Check if conversation already exists
+    conversation = Conversation.objects.filter(item=item, participants=request.user).first()
+
+    if not conversation:
+        conversation = Conversation.objects.create(item=item)
+        conversation.participants.add(request.user, item.owner)
+        conversation.save()
+
+    return redirect('conversation_detail', conversation_id=conversation.id)
