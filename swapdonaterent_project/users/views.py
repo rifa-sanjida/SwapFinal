@@ -57,3 +57,23 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'users/change_password.html', {'form': form})
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        form = AccountDeleteForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+
+            if username == request.user.username and request.user.check_password(password):
+                request.user.delete()
+                messages.success(request, 'Your account has been deleted.')
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid username or password.')
+    else:
+        form = AccountDeleteForm()
+
+    return render(request, 'users/delete_account.html', {'form': form})
