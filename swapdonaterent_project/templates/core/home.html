@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- User Welcome Section -->
+{% if user.is_authenticated %}
+
+{% endif %}
+
 <div class="hero-section">
     <h1>SwapDonateRent</h1>
-    <p>Let your unused items spark someone’s future</p>
+    <p>Let your unused items spark someone's future</p>
     <div class="hero-buttons">
         <a href="{% url 'item_list' %}" class="btn">Browse Items</a>
         {% if user.is_authenticated %}
@@ -13,6 +18,7 @@
         {% endif %}
     </div>
 </div>
+
 <div class="features-section">
     <h2>How It Works</h2>
     <div class="grid">
