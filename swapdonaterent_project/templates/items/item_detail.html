@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="item-detail-container">
+    <div class="item-detail">
+        <div class="item-images">
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="item-main-image">
+        </div>
+
+        <div class="item-info">
+            <div class="item-header">
+                <div class="item-badges">
+                    <span class="item-badge badge-{{ item.item_type }}">{{ item.get_item_type_display }}</span>
+                    <span class="condition-badge">{{ item.get_condition_display }}</span>
+                </div>
+                <h1>{{ item.name }}</h1>
+                <p class="item-posted">Posted by {{ item.owner.username }} on {{ item.created_at|date:"F j, Y" }}</p>
+            </div>
+
+            <div class="item-pricing">
+                {% if item.price %}
+                    <h2 class="item-price">Price:{{ item.price }}</h2>
+                {% else %}
+                    <h2 class="item-price-free">Free</h2>
+                {% endif %}
+            </div>
+
+            <div class="item-description">
+                <h3>Description</h3>
+                <p>{{ item.description }}</p>
+            </div>
+
+            <div class="item-details-grid">
+                <div class="detail-item">
+                    <strong>Category:</strong>
+                    <span>{{ item.category.name }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Location:</strong>
+                    <span>{{ item.location }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Contact Info:</strong>
+                    <span>{{ item.contact_info }}</span>
+                </div>
+            </div>
+
+            <div class="item-actions">
+                {% if user.is_authenticated %}
+                    {% if user == item.owner %}
+                        <a href="{% url 'item_update' item.pk %}" class="btn btn-warning">Edit Item</a>
+                        <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger">Delete Item</a>
+                    {% else %}
+                        <a href="{% url 'add_to_cart' item.id %}" class="btn btn-success">Add to Cart</a>
+                        <a href="{% url 'start_conversation' item.id %}" class="btn">Message Seller</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-success">Login to Contact Seller</a>
+                {% endif %}
+                <a href="{% url 'item_list' %}" class="btn">Back to Browse</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
