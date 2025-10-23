@@ -77,3 +77,14 @@ def delete_account(request):
         form = AccountDeleteForm()
 
     return render(request, 'users/delete_account.html', {'form': form})
+
+
+# Add custom logout view that handles GET requests
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, 'You have been logged out successfully.')
+        return redirect('home')
+    else:
+        # If it's a GET request, show confirmation page
+        return render(request, 'users/logout.html')
