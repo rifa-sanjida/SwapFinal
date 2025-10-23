@@ -1,1 +1,84 @@
+{% extends 'base.html' %}
 
+{% block content %}
+<div class="items-header">
+    <h1>Browse Items</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'item_create' %}" class="btn btn-success">Post New Item</a>
+    {% endif %}
+</div>
+
+<div class="filters-section">
+    <form method="GET" class="filter-form">
+        <div class="filter-grid">
+            <div class="form-group">
+                <input type="text" name="search" placeholder="Search items..." class="form-control" value="{{ request.GET.search }}">
+            </div>
+
+            <div class="form-group">
+                <select name="category" class="form-control">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <select name="item_type" class="form-control">
+                    <option value="">All Types</option>
+                    <option value="swap" {% if request.GET.item_type == 'swap' %}selected{% endif %}>Swap</option>
+                    <option value="donate" {% if request.GET.item_type == 'donate' %}selected{% endif %}>Donate</option>
+                    <option value="rent" {% if request.GET.item_type == 'rent' %}selected{% endif %}>Rent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Apply Filters</button>
+                <a href="{% url 'item_list' %}" class="btn btn-warning">Clear</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if items %}
+    <div class="grid">
+        {% for item in items %}
+            <div class="card">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img">
+                <div class="card-body">
+                    <div class="card-badges">
+                        <span class="item-badge badge-{{ item.item_type }}">{{ item.get_item_type_display }}</span>
+                        <span class="condition-badge">{{ item.get_condition_display }}</span>
+                    </div>
+                    <h3 class="card-title">{{ item.name }}</h3>
+                    <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+
+                    <div class="item-details">
+                        {% if item.price %}
+                            <p class="item-price">Price:{{ item.price }}</p>
+                        {% else %}
+                            <p class="item-price-free">Free</p>
+                        {% endif %}
+                        <p class="item-location">{{ item.location }}</p>
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="{% url 'item_detail' item.pk %}" class="btn">View Details</a>
+                        {% if user.is_authenticated and user != item.owner %}
+                            <a href="{% url 'add_to_cart' item.id %}" class="btn btn-success">Add to Cart</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-items">
+        <h3>No items found</h3>
+        <p>Try adjusting your search filters or <a href="{% url 'item_create' %}">post a new item</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
