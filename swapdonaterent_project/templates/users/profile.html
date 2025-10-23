@@ -1,0 +1,84 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Your Profile</h2>
+
+    <div class="profile-content">
+        <div class="profile-sidebar">
+            <div class="profile-picture">
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-img">
+            </div>
+            <div class="profile-stats">
+                <h3>Account Info</h3>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Member since:</strong> {{ user.date_joined|date:"F Y" }}</p>
+            </div>
+        </div>
+
+        <div class="profile-main">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h3>Update Profile</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    {{ user_form.username }}
+                    {% if user_form.username.errors %}
+                        <div class="error">{{ user_form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    {{ user_form.email }}
+                    {% if user_form.email.errors %}
+                        <div class="error">{{ user_form.email.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    {{ profile_form.phone }}
+                    {% if profile_form.phone.errors %}
+                        <div class="error">{{ profile_form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    {{ profile_form.address }}
+                    {% if profile_form.address.errors %}
+                        <div class="error">{{ profile_form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    {{ profile_form.bio }}
+                    {% if profile_form.bio.errors %}
+                        <div class="error">{{ profile_form.bio.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Profile Picture</label>
+                    {{ profile_form.profile_picture }}
+                    {% if profile_form.profile_picture.errors %}
+                        <div class="error">{{ profile_form.profile_picture.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <a href="{% url 'change_password' %}" class="btn btn-warning">Change Password</a>
+                    <a href="{% url 'delete_account' %}" class="btn btn-danger">Delete Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
